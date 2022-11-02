@@ -9,6 +9,14 @@ use SocialNetwork\SubscriberAlreadyExistsException;
 use SocialNetwork\SubscriberNotFoundException;
 use SocialNetwork\Twitter;
 
+
+  use SocialNetwork\TwitterException;
+require '..\..\main\php\Twitter.php';
+require '..\..\main\php\Follower.php';
+
+
+
+
 require '..\..\..\vendor\autoload.php';
 
 class testTwitter extends TestCase

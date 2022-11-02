@@ -8,18 +8,21 @@ require 'IObservable.php';
 
 class Twitter implements IObservable
 {
+
     //region private attributes
-    private array $observers = array();
+    private array $observers;
     //endregion private attributes
+
+    protected $twits;
 
     public function __construct(array $observers = array())
     {
-        throw new RuntimeException();
+        $this->observers = $observers;
     }
 
     public function subscribe(array $observers):void
     {
-        throw new RuntimeException();
+        self::setObservers($observers);
     }
 
     public function unsubscribe(IObserver $observer):void
@@ -29,17 +32,43 @@ class Twitter implements IObservable
 
     public function notifyObservers():void
     {
-        throw new RuntimeException();
+        throw new EmptyListOfSubscribersException();
     }
 
     public function getObservers():array
     {
+
+        if ($this->observers==null){
+            return array();
+        }
+
         return $this->observers;
     }
 
     public function getTwits():array
     {
-        throw new RuntimeException();
+        if ($this->twits==null){
+            return array();
+        }
+        return $this->twits;
+    }
+    public function setTwits(array $twits):void
+    {
+        $this->twits = $twits;
+    }
+    public function setObservers(array $observers):void
+    {
+        if ($this->observers!=null){
+            foreach (self::getObservers() as $observer)
+            {
+                $this->observers[] = $observer;
+            }
+
+        }
+        else
+        {
+            $this->observers = $observers;
+        }
     }
 }
 
