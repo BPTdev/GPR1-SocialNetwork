@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types = 1);
 
 namespace SocialNetwork;
 
@@ -20,68 +21,84 @@ class Twitter implements IObservable
         $this->observers = $observers;
     }
 
-    public function subscribe(array $observers):void
+    public function subscribe(array $observers): void
     {
         self::setObservers($observers);
     }
 
-    public function unsubscribe(IObserver $observer):void
+    public function unsubscribe(IObserver $observer): void
     {
-        throw new RuntimeException();
+        $observers = self::getObservers();
+        if ($observers != null) {
+            $position = array_search($observer, $observers,true);
+            if ($position) {
+                unset($observers[$position]);
+                $this->observers = $observers;
+            } else {
+                throw new SubscriberNotFoundException;
+            }
+        } else {
+            throw new EmptyListOfSubscribersException;
+        }
     }
 
-    public function notifyObservers():void
+    public function notifyObservers(): void
     {
         throw new EmptyListOfSubscribersException();
     }
 
-    public function getObservers():array
+    public function getObservers(): array
     {
-
-        if ($this->observers==null){
+        if ($this->observers == null) {
             return array();
         }
-
         return $this->observers;
     }
 
-    public function getTwits():array
+    public function getTwits(): array
     {
-        if ($this->twits==null){
+        if ($this->twits == null) {
             return array();
         }
         return $this->twits;
     }
-    public function setTwits(array $twits):void
+
+    public function setTwits(array $twits): void
     {
         $this->twits = $twits;
     }
-    public function setObservers(array $observers):void
+
+    public function setObservers(array $observers): void
     {
-        if ($this->observers!=null){
-            $allreadyIns=self::getObservers();
+        if ($this->observers != null) {
+            $allreadyIns = self::getObservers();
             //Pour tout les observateur existant as $observer
-            foreach ($observers as $observer)
-            {
-                if (in_array($observer,$allreadyIns,true)){
+            foreach ($observers as $observer) {
+                if (in_array($observer, $allreadyIns, true)) {
                     throw new SubscriberAlreadyExistsException();
                 }
             }
-            foreach ($allreadyIns as $allreadyIn)
-            {
+            foreach ($allreadyIns as $allreadyIn) {
                 $this->observers[] = $allreadyIn;
             }
-
-
-        }
-        else
-        {
+        } else {
             $this->observers = $observers;
         }
     }
 }
 
-class TwitterException extends RuntimeException { }
-class EmptyListOfSubscribersException extends TwitterException { }
-class SubscriberAlreadyExistsException extends TwitterException { }
-class SubscriberNotFoundException extends TwitterException { }
+class TwitterException extends RuntimeException
+{
+}
+
+class EmptyListOfSubscribersException extends TwitterException
+{
+}
+
+class SubscriberAlreadyExistsException extends TwitterException
+{
+}
+
+class SubscriberNotFoundException extends TwitterException
+{
+}
