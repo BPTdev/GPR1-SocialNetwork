@@ -30,9 +30,12 @@ class Twitter implements IObservable
     {
         $observers = self::getObservers();
         if ($observers != null) {
-            $position = array_search($observer, $observers,true);
+
+            $position = in_array($observer, $observers,true);
+            error_log("".$position);
             if ($position) {
                 unset($observers[$position]);
+                unset($observers[$observer]);
                 $this->observers = $observers;
             } else {
                 throw new SubscriberNotFoundException;
