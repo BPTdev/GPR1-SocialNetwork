@@ -59,10 +59,19 @@ class Twitter implements IObservable
     public function setObservers(array $observers):void
     {
         if ($this->observers!=null){
-            foreach (self::getObservers() as $observer)
+            $allreadyIns=self::getObservers();
+            //Pour tout les observateur existant as $observer
+            foreach ($observers as $observer)
             {
-                $this->observers[] = $observer;
+                if (in_array($observer,$allreadyIns,true)){
+                    throw new SubscriberAlreadyExistsException();
+                }
             }
+            foreach ($allreadyIns as $allreadyIn)
+            {
+                $this->observers[] = $allreadyIn;
+            }
+
 
         }
         else
